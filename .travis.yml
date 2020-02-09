@@ -11,7 +11,7 @@ cache:
     - '$HOME/.m2/repository'
 
 before_script: cd shout-web
-script: "mvn package"
+script: "mvn package -DskipTests"
 
 notifications:
   email:
