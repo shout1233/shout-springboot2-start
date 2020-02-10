@@ -10,8 +10,36 @@ cache:
   directories:
     - '$HOME/.m2/repository'
 
-script: "mvn package"
+before_script: cd shout-web
+script: "mvn package -DskipTests"
 
+before_deploy:
+  - zip -r shout-web *
+  - mkdir -p deploy
+  - mv shout-web.zip deploy/shout-web.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: shout-springboot2-start-build
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy
+    wait-until-deployed: true
+    
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: shout-springboot2-start-build
+    key: shout-web.zip
+    bundle_type: zip
+    application: shout-springboot2-start
+    deployment_group: shout-springboot2-start-group1
+    region: ap-northeast-2
+    wait-until-deployed: true
+    
 notifications:
   email:
     recipients:
