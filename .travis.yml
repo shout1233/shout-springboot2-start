@@ -37,7 +37,7 @@ deploy:
     bundle_type: zip
     application: shout-springboot2-start
     deployment_group: shout-springboot2-start-group1
-    region: ap_northeast-2
+    region: ap-northeast-2
     wait-until-deployed: true
     
 notifications:
