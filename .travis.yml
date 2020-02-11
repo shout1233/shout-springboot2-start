@@ -14,9 +14,12 @@ before_script: cd shout-web
 script: "mvn package -DskipTests"
 
 before_deploy:
-  - zip -r shout-web *
-  - mkdir -p deploy
-  - mv shout-web.zip deploy/shout-web.zip
+  - mkdir -p before-deploy
+  - cp appspec.yml before-deploy/
+  - cp target/*.jar before-deploy/
+  - cd before-deploy && zip -r before-deploy *
+  - cd ../ && mkdir -p deploy
+  - mv before-deploy/before-deploy.zip deploy/shout-web.zip
 
 deploy:
   - provider: s3
